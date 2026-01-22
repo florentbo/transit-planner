@@ -1,0 +1,24 @@
+# Backend build artifacts
+backend/build/
+backend/.gradle/
+backend/bin/
+backend/out/
+
+# Frontend build artifacts
+frontend/dist/
+frontend/node_modules/
+frontend/openapitools.json
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

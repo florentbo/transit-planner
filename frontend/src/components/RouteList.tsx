@@ -1,69 +1,54 @@
-import { useState, useEffect } from 'react';
-import { RoutesApi, SavedRouteResponse } from '../api/generated';
-import { apiConfig } from '../api/config';
+import { useListRoutes } from '../gen/hooks/useListRoutes';
 
-interface RouteListProps {
-  refreshTrigger: number;
-}
-
-export function RouteList({ refreshTrigger }: RouteListProps) {
-  const [routes, setRoutes] = useState<SavedRouteResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchRoutes = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const api = new RoutesApi(apiConfig);
-        const response = await api.listRoutes();
-        setRoutes(response.data);
-      } catch (err) {
-        setError('Failed to load routes. Please try again.');
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchRoutes();
-  }, [refreshTrigger]);
+export function RouteList() {
+  const { data: routes, isLoading, error } = useListRoutes();
 
   if (isLoading) {
-    return <div>Loading routes...</div>;
+    return (
+      <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+        Loading routes...
+      </div>
+    );
   }
 
   if (error) {
-    return <div style={{ color: 'red' }}>{error}</div>;
+    return (
+      <div className="p-4 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-md">
+        Failed to load routes. Please try again.
+      </div>
+    );
   }
 
-  if (routes.length === 0) {
-    return <div>No routes yet. Create your first route above!</div>;
+  if (!routes || routes.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+        No routes yet. Create your first route above!
+      </div>
+    );
   }
 
   return (
     <div>
-      <h2>Your Saved Routes ({routes.length})</h2>
-      <div style={{ display: 'grid', gap: '1rem' }}>
+      <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+        Your Saved Routes ({routes.length})
+      </h2>
+      <div className="grid gap-4">
         {routes.map((route) => (
           <div
             key={route.id}
-            style={{
-              border: '1px solid #ccc',
-              borderRadius: '8px',
-              padding: '1rem',
-              backgroundColor: '#f9f9f9'
-            }}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border border-gray-200 dark:border-gray-700"
           >
-            <h3>{route.name}</h3>
-            <p>
-              <strong>{route.origin}</strong> → <strong>{route.destination}</strong>
+            <h3 className="font-semibold text-gray-900 dark:text-white">
+              {route.name}
+            </h3>
+            <p className="mt-1 text-gray-600 dark:text-gray-400">
+              <span className="font-medium">{route.origin}</span>
+              <span className="mx-2">→</span>
+              <span className="font-medium">{route.destination}</span>
             </p>
-            <small style={{ color: '#666' }}>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-500">
               Created: {new Date(route.createdAt).toLocaleString()}
-            </small>
+            </p>
           </div>
         ))}
       </div>

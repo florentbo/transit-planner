@@ -760,6 +760,48 @@ src/
 - Prevent forbidden imports
 - Ensure layer isolation
 
+### 7.10 Frontend Routing
+
+**Decision: TanStack Router for Client-Side Routing**
+
+*When to Add:* Feature 3 (Route Management) introduces `/routes/:id`, requiring a router.
+
+*Approach:*
+- Use TanStack Router for type-safe, client-first routing
+- File-based route generation for automatic route discovery
+- Integrates naturally with existing TanStack Query setup (loader/prefetch patterns)
+
+*Rationale:*
+- **Ecosystem consistency**: Already using TanStack Query via Kubb — shared patterns and conventions
+- **Type-safe routes**: Route params, search params, and loaders are fully typed
+- **Client-first**: No SSR complexity — fits this SPA + REST API architecture
+- **Community momentum**: State of React 2025 survey shows TanStack Start/Router gaining significant traction as a lightweight alternative to Next.js
+
+*Server Components — Intentionally Skipped:*
+- State of React 2025 survey shows lukewarm adoption (described as "troubling" by survey authors)
+- No benefit for SPA + REST API architecture
+- Adds complexity without value for this use case
+
+### 7.11 CSS & Component Library
+
+**Decision: Tailwind CSS v4 + shadcn/ui**
+
+*Current State:* Tailwind CSS v4 already integrated via `@tailwindcss/vite` plugin.
+
+*Component Library:*
+- Use shadcn/ui for pre-built, accessible UI components (dialogs, dropdowns, toasts, forms)
+- Built on Radix UI primitives (unstyled, accessible) + Tailwind styling
+- Copy-paste model: components are copied into the project, not installed as a dependency — full ownership and customization
+
+*When to Add:* Feature 3+ (Route Management) when UI needs grow beyond basic forms — confirmation dialogs, toast notifications, dropdown menus.
+
+*Rationale:*
+- **Tailwind is industry standard**: State of React 2025 confirms utility-first CSS dominance; CSS-in-JS (Styled Components, Emotion) declining
+- **shadcn/ui fastest-growing lib**: 20% → 56% adoption in two years (State of React 2025)
+- **Accessible by default**: Radix UI primitives handle keyboard navigation, focus management, ARIA attributes
+- **No vendor lock-in**: Copy-paste means no dependency on library releases or breaking changes
+- **Perfect Tailwind fit**: Components use Tailwind classes natively, no style system mismatch
+
 ---
 
 ## 8. Strategic Design Decisions

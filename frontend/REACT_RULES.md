@@ -246,3 +246,8 @@ if (result && otherCondition) {
 - **React 19**: May include React Compiler which auto-optimizes memoization
 - **This is Vite**: No Server Components, Server Actions, or Next.js-specific patterns
 - **Priority**: Focus on Bundle and Client-Side Fetching first, micro-optimizations last
+
+## Related Guidelines
+
+- [WEB_DESIGN_GUIDELINES.md](./WEB_DESIGN_GUIDELINES.md) — UI/UX quality rules (accessibility, forms, animation, typography, dark mode)
+- [COMPOSITION_PATTERNS.md](./COMPOSITION_PATTERNS.md) — Component architecture patterns (compound components, state lifting, providers)

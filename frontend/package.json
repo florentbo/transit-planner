@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run generate && tsc -b && vite build",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "verify": "vitest run && eslint . && tsc -b",
+    "build": "npm run verify && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "generate": "kubb generate"
@@ -25,6 +28,8 @@
     "@kubb/plugin-oas": "^4.12.8",
     "@kubb/plugin-react-query": "^4.12.8",
     "@kubb/plugin-ts": "^4.12.8",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^25.0.10",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
@@ -33,8 +38,10 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^17.1.0",
+    "jsdom": "^28.1.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "vitest": "^4.0.18"
   }
 }

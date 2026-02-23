@@ -93,9 +93,9 @@ For React best practices and performance patterns, follow `frontend/REACT_RULES.
 
 - **Never commit without asking first**
 - Use one-line commit messages only
-- Do not mention Claude in commit messages
+- Do not mention Claude in commit messages — NO Co-Authored-By trailer, NO Claude references whatsoever
 - Before committing, run tests for touched areas with limited output:
-  - Frontend changes: `cd frontend && npm run lint && npm run build 2>&1 | tail -20`
+  - Frontend changes: `cd frontend && npm run verify 2>&1 | tail -20`
   - Backend changes: `cd backend && ./gradlew test 2>&1 | tail -20`
 
 ## Key Files

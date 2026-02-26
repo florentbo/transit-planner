@@ -20,7 +20,9 @@ Two phases deliver the core value: first, wire the backend to real STIB departur
   2. Each departure in the response includes line number, direction, and minutes until arrival
   3. The STIB API key is read from an environment variable, never hardcoded
   4. The endpoint is defined in `api-spec/openapi.yaml` and the backend implements the generated interface
-**Plans**: TBD
+**Plans**: 2 plans
+- [ ] 01-01-PLAN.md — OpenAPI contract + STIB API client with JSON parsing test
+- [ ] 01-02-PLAN.md — DeparturesService + controller + end-to-end verification
 
 ### Phase 2: Frontend Live Integration
 **Goal**: Users open the dashboard and see live departure times that stay current automatically
@@ -41,5 +43,5 @@ Phases execute in numeric order: 1 → 2
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Backend STIB Integration | 0/? | Not started | - |
+| 1. Backend STIB Integration | 0/2 | Planned | - |
 | 2. Frontend Live Integration | 0/? | Not started | - |

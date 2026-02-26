@@ -1,7 +1,7 @@
 # Requirements: Transit Planner
 
 **Defined:** 2026-02-26
-**Core Value:** Open the app → instantly see real-time departures for your commute routes
+**Core Value:** Open the app -> instantly see real-time departures for your commute routes
 
 ## v1 Requirements
 
@@ -56,12 +56,12 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DEPT-01 | Phase 1 | Pending |
-| DEPT-02 | Phase 1 | Pending |
-| DEPT-03 | Phase 2 | Pending |
-| DEPT-04 | Phase 2 | Pending |
-| DEPT-05 | Phase 2 | Pending |
-| DASH-01 | Phase 2 | Pending |
+| DEPT-01 | Phase 1 - Backend STIB Integration | Pending |
+| DEPT-02 | Phase 1 - Backend STIB Integration | Pending |
+| DEPT-03 | Phase 2 - Frontend Live Integration | Pending |
+| DEPT-04 | Phase 2 - Frontend Live Integration | Pending |
+| DEPT-05 | Phase 2 - Frontend Live Integration | Pending |
+| DASH-01 | Phase 2 - Frontend Live Integration | Pending |
 
 **Coverage:**
 - v1 requirements: 6 total
@@ -70,4 +70,4 @@
 
 ---
 *Requirements defined: 2026-02-26*
-*Last updated: 2026-02-26 after initial definition*
+*Last updated: 2026-02-26 after roadmap creation*

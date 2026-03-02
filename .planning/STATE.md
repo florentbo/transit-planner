@@ -1,3 +1,16 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: unknown
+last_updated: "2026-03-02T20:25:15.125Z"
+progress:
+  total_phases: 1
+  completed_phases: 1
+  total_plans: 2
+  completed_plans: 2
+---
+
 # Project State
 
 ## Project Reference
@@ -34,6 +47,7 @@ Progress: [█░░░░░░░░░] 25%
 - Trend: baseline
 
 *Updated after each plan completion*
+| Phase 01-backend-stib-integration P02 | 2 | 1 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -50,6 +64,9 @@ Recent decisions affecting current work:
 - [01-01] PassingTimesDeserializer uses its own ObjectMapper to avoid shared state
 - [01-01] ADJUST_DATES_TO_CONTEXT_TIME_ZONE=false preserves +01:00 offset from STIB data
 - [01-01] StibApiException created as dedicated RuntimeException for HTTP errors and timeouts
+- [Phase 01-02]: Clock injected as Spring @Bean in CorsConfig for testable time logic in DeparturesService
+- [Phase 01-02]: ExceptionHandler on DeparturesApiController maps ResponseStatusException(BAD_GATEWAY) to structured ErrorResponse
+- [Phase 01-02]: Direction filter uses equalsIgnoreCase on destination.fr() against commute route direction string
 
 ### Pending Todos
 

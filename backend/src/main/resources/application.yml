@@ -5,6 +5,11 @@ spring:
   application:
     name: transit-backend
 
+stib:
+  api:
+    base-url: https://stibmivb.opendatasoft.com/api/explore/v2.1
+    key: ${STIB_API_KEY}
+
 logging:
   level:
     com.transit: INFO

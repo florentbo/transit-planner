@@ -49,8 +49,7 @@ public class DeparturesService {
             List<Departure> departures = stibResponse.results().stream()
                     .filter(result -> route.pointId().equals(result.pointId()) && route.lineId().equals(result.lineId()))
                     .flatMap(result -> result.passingTimes().stream())
-                    .filter(passingTime -> passingTime.destination() != null
-                            && route.direction().equalsIgnoreCase(passingTime.destination().fr()))
+                    .filter(passingTime -> passingTime.destination() != null)
                     .map(passingTime -> {
                         int minutes = (int) ChronoUnit.MINUTES.between(now, passingTime.expectedArrivalTime()) + 1;
                         String dest = passingTime.destination().fr();

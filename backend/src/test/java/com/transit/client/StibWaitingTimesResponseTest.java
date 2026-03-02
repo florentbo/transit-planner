@@ -58,20 +58,21 @@ class StibWaitingTimesResponseTest {
     }
 
     @Test
-    void shouldDeserializeMultipleResults() throws Exception {
+    void shouldDeserializeRealStibResponseWithMessageField() throws Exception {
+        // Real STIB response — some passingtimes entries have an extra "message" field
         String json = """
                 {
                   "total_count": 2,
                   "results": [
                     {
-                      "pointid": "8784",
+                      "pointid": "5008",
                       "lineid": "51",
-                      "passingtimes": "[{\\"destination\\": {\\"fr\\": \\"GARE DU MIDI\\", \\"nl\\": \\"ZUIDSTATION\\"}, \\"expectedArrivalTime\\": \\"2024-12-27T18:51:00+01:00\\", \\"lineId\\": \\"51\\"}, {\\"destination\\": {\\"fr\\": \\"GARE DU MIDI\\", \\"nl\\": \\"ZUIDSTATION\\"}, \\"expectedArrivalTime\\": \\"2024-12-27T18:57:00+01:00\\", \\"lineId\\": \\"51\\"}]"
+                      "passingtimes": "[{\\"destination\\": {\\"fr\\": \\"BELGICA\\", \\"nl\\": \\"BELGICA\\"}, \\"expectedArrivalTime\\": \\"2026-03-02T21:38:00+01:00\\", \\"lineId\\": \\"51\\"}, {\\"destination\\": {\\"fr\\": \\"BELGICA\\", \\"nl\\": \\"BELGICA\\"}, \\"expectedArrivalTime\\": \\"2026-03-02T21:53:00+01:00\\", \\"lineId\\": \\"51\\", \\"message\\": {\\"en\\": \\"Theoretical time\\", \\"fr\\": \\"Temps théorique\\", \\"nl\\": \\"Theoretische tijd\\"}}]"
                     },
                     {
-                      "pointid": "5008",
+                      "pointid": "8784",
                       "lineid": "6",
-                      "passingtimes": "[{\\"destination\\": {\\"fr\\": \\"ELISABETH\\", \\"nl\\": \\"ELISABETH\\"}, \\"expectedArrivalTime\\": \\"2024-12-27T19:02:00+01:00\\", \\"lineId\\": \\"6\\"}]"
+                      "passingtimes": "[{\\"destination\\": {\\"fr\\": \\"ELISABETH\\", \\"nl\\": \\"ELISABETH\\"}, \\"expectedArrivalTime\\": \\"2026-03-02T21:35:00+01:00\\", \\"lineId\\": \\"6\\"}]"
                     }
                   ]
                 }
@@ -82,16 +83,18 @@ class StibWaitingTimesResponseTest {
         assertThat(response.totalCount()).isEqualTo(2);
         assertThat(response.results()).hasSize(2);
 
-        StibWaitingTimesResponse.Result firstResult = response.results().get(0);
-        assertThat(firstResult.pointId()).isEqualTo("8784");
-        assertThat(firstResult.lineId()).isEqualTo("51");
-        assertThat(firstResult.passingTimes()).hasSize(2);
-        assertThat(firstResult.passingTimes().get(0).destination().fr()).isEqualTo("GARE DU MIDI");
-        assertThat(firstResult.passingTimes().get(1).destination().nl()).isEqualTo("ZUIDSTATION");
+        StibWaitingTimesResponse.Result woestResult = response.results().get(0);
+        assertThat(woestResult.pointId()).isEqualTo("5008");
+        assertThat(woestResult.lineId()).isEqualTo("51");
+        assertThat(woestResult.passingTimes()).hasSize(2);
+        assertThat(woestResult.passingTimes().get(0).destination().fr()).isEqualTo("BELGICA");
+        // Second entry has the "message" field — should be ignored, not cause failure
+        assertThat(woestResult.passingTimes().get(1).destination().fr()).isEqualTo("BELGICA");
 
-        StibWaitingTimesResponse.Result secondResult = response.results().get(1);
-        assertThat(secondResult.pointId()).isEqualTo("5008");
-        assertThat(secondResult.passingTimes()).hasSize(1);
+        StibWaitingTimesResponse.Result pannenhuisResult = response.results().get(1);
+        assertThat(pannenhuisResult.pointId()).isEqualTo("8784");
+        assertThat(pannenhuisResult.passingTimes()).hasSize(1);
+        assertThat(pannenhuisResult.passingTimes().get(0).destination().fr()).isEqualTo("ELISABETH");
     }
 
     @Test

@@ -100,8 +100,8 @@ class DeparturesServiceTest {
     }
 
     @Test
-    void filtersDeparturesByDirection() {
-        // Line 6 from Pannenhuis goes both to Elisabeth and Roi Baudouin — only Elisabeth should appear
+    void returnsAllDeparturesForMatchingLine() {
+        // Line 6 from Pannenhuis — both directions should appear (no direction filtering)
         OffsetDateTime arrival1 = OffsetDateTime.parse("2026-03-02T20:05:00+01:00");
         OffsetDateTime arrival2 = OffsetDateTime.parse("2026-03-02T20:10:00+01:00");
 
@@ -111,7 +111,6 @@ class DeparturesServiceTest {
                 new StibWaitingTimesResponse.Destination("Roi Baudouin", "Koning Boudewijn"), arrival2, "6");
 
         StibWaitingTimesResponse mockResponse = new StibWaitingTimesResponse(2, List.of(
-                // No Woest result in this test — Woest route will just have 0 departures
                 new StibWaitingTimesResponse.Result("8784", "6", List.of(toElisabeth, toRoiBaudouin))
         ));
 
@@ -124,7 +123,6 @@ class DeparturesServiceTest {
                 .findFirst()
                 .orElseThrow();
 
-        assertThat(pannenhuisRoute.getDepartures()).hasSize(1);
-        assertThat(pannenhuisRoute.getDepartures().get(0).getDestination()).isEqualTo("Elisabeth");
+        assertThat(pannenhuisRoute.getDepartures()).hasSize(2);
     }
 }

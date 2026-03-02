@@ -35,6 +35,7 @@ public class StibApiClient {
         JavaTimeModule javaTimeModule = new JavaTimeModule();
         this.objectMapper.registerModule(javaTimeModule);
         this.objectMapper.configure(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false);
+        this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public StibWaitingTimesResponse fetchWaitingTimes(List<String> pointIds) {

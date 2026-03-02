@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A personal transit app that shows real-time departure times for your daily commute routes. Open the app, instantly see when your next metro/tram leaves. Built for Brussels (STIB/MIVB) first, with London (TfL) planned for later.
+A personal transit app that shows real-time STIB departure times for your daily Brussels commute. Open the app, instantly see when your next metro/tram leaves from Woest (line 51) and Pannenhuis (line 6), with data refreshing every 30 seconds.
 
 ## Core Value
 
@@ -12,58 +12,62 @@ Open the app → instantly see real-time departures for your commute routes.
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Real-time STIB departures for hardcoded Brussels routes on dashboard — v1.0
+- ✓ Each departure shows line number, direction, and minutes until arrival — v1.0
+- ✓ Departures auto-refresh every 30 seconds — v1.0
+- ✓ Loading state while fetching departures — v1.0
+- ✓ Error state if STIB API is unavailable — v1.0
+- ✓ Dashboard layout with route card, transport lines, and departure pills — v1.0
 
 ### Active
 
-- [ ] Real-time STIB departures for hardcoded Brussels routes on dashboard
-- [ ] Each departure shows line number, direction, and minutes until arrival
-- [ ] Departures auto-refresh every 30 seconds
-- [ ] Loading state while fetching departures
-- [ ] Error state if STIB API is unavailable
-- [ ] Dashboard layout with route card, transport lines, and departure pills
+(None yet — define for next milestone)
 
 ### Out of Scope
 
 - TfL London departures — later milestone, Brussels first
-- Route persistence (PostgreSQL) — hardcoded routes sufficient for v1
+- Route persistence (PostgreSQL) — hardcoded routes sufficient for now
 - Route CRUD (create/edit/delete) — not needed while routes are hardcoded
 - Stop/line search — not needed while routes are hardcoded
 - User authentication (Clerk) — personal app, single user for now
-- Multi-city switching UI — Brussels only for v1
+- Multi-city switching UI — Brussels only for now
 - Full DDD domain model — keep it simple, evolve when complexity demands it
+- Offline/PWA support — network required for real-time data
 
 ## Context
 
-An older working backend exists at `~/personal-dev/public-transports/public-transports-back` with:
-- Real STIB API integration (OpenDataSoft endpoint, API key available)
-- Real TfL API integration
-- Hardcoded journeys for Brussels (Woest station 5008/line 51, Pannenhuis station 8784/line 6) and London
-
-The new project has a React 19 frontend with a mock dashboard already rendering departure data beautifully. The backend is a Spring Boot 4 skeleton with 2 basic route endpoints and in-memory storage.
-
-**Strategy:** Port the STIB integration logic (HTTP calls, response mapping, minutes calculation) into the new backend. Don't port the old architecture or naming — use the new project's domain terms (Route → Lines → Departures).
+Shipped v1.0 with 1,186 LOC TypeScript + 526 LOC Java.
+Tech stack: Java 25 + Spring Boot 4.0 (backend), React 19 + TypeScript + Vite + React Query (frontend).
+Contract-first API via OpenAPI 3.0 with code generation on both sides.
 
 **User's Brussels commute:**
 - Woest (station 5008) → line 51 → direction Gare du Midi
 - Pannenhuis (station 8784) → line 6 → direction Elisabeth
+
+**Architecture:**
+- Backend: controller/service/client pattern (Spring Boot)
+- Frontend: clean architecture (entities, use-cases/ports, infrastructure/adapters, presentation)
+- API contract: `api-spec/openapi.yaml` generates Java interfaces (backend) and TypeScript types (frontend)
 
 ## Constraints
 
 - **API Key**: STIB API key must be stored as environment variable, not hardcoded
 - **Tech stack**: Java 25 + Spring Boot 4.0 (backend), React 19 + TypeScript + Vite (frontend)
 - **Contract-first**: OpenAPI spec is source of truth for API contract
-- **Architecture**: Keep it simple — no premature DDD layers. Clean separation (controller/service/client) is enough for v1
+- **Architecture**: Keep it simple — no premature DDD layers. Clean separation is enough until complexity demands more
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Departures first, auth later | Core value is seeing departure times, not logging in | — Pending |
-| Port integration, not architecture | Old code works but has god-config and hardcoded keys | — Pending |
-| Hardcoded routes for v1 | Fastest path to real departures | — Pending |
-| New domain naming (Route/Line/Departure) | Matches frontend entities, clearer than old Journey/Trip | — Pending |
-| Skip full DDD for v1 | Overkill for 3 phases of work, evolve when needed | — Pending |
+| Departures first, auth later | Core value is seeing departure times, not logging in | ✓ Good — shipped core value in v1.0 |
+| Port integration, not architecture | Old code works but has god-config and hardcoded keys | ✓ Good — clean STIB client with proper DI |
+| Hardcoded routes for v1 | Fastest path to real departures | ✓ Good — enabled fast delivery |
+| New domain naming (Route/Line/Departure) | Matches frontend entities, clearer than old Journey/Trip | ✓ Good — consistent across stack |
+| Skip full DDD for v1 | Overkill for 2 phases of work, evolve when needed | ✓ Good — kept codebase lean |
+| Custom Jackson deserializer for STIB | STIB returns JSON string inside JSON | ✓ Good — handles real API quirks cleanly |
+| React Query for auto-refresh | Built-in refetchInterval, caching, stale data handling | ✓ Good — minimal code for complex behavior |
+| Plain fetch over generated client | Infrastructure adapter owns HTTP concerns | ✓ Good — simple, no framework coupling |
 
 ---
-*Last updated: 2026-02-26 after initialization*
+*Last updated: 2026-03-02 after v1.0 milestone*

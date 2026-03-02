@@ -34,7 +34,9 @@ Two phases deliver the core value: first, wire the backend to real STIB departur
   3. A loading indicator is visible while the first fetch (or any refresh) is in flight
   4. When the STIB API is unavailable, the dashboard shows an error message instead of crashing
   5. The layout matches the existing mock: route cards, transport lines, and departure pills
-**Plans**: TBD
+**Plans**: 2 plans
+- [ ] 02-01-PLAN.md — Real API wiring + type remodel + 30s auto-refresh
+- [ ] 02-02-PLAN.md — Loading skeleton, error card, staleness warning + visual verification
 
 ## Progress
 
@@ -44,4 +46,4 @@ Phases execute in numeric order: 1 → 2
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Backend STIB Integration | 2/2 | Complete   | 2026-03-02 |
-| 2. Frontend Live Integration | 0/? | Not started | - |
+| 2. Frontend Live Integration | 0/2 | Not started | - |

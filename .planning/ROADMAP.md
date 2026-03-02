@@ -7,7 +7,7 @@ Two phases deliver the core value: first, wire the backend to real STIB departur
 ## Phases
 
 - [x] **Phase 1: Backend STIB Integration** - Expose a real departures endpoint backed by the STIB OpenDataSoft API (completed 2026-03-02)
-- [ ] **Phase 2: Frontend Live Integration** - Replace mock data with real API calls, auto-refresh every 30s, and handle loading/error states
+- [x] **Phase 2: Frontend Live Integration** - Replace mock data with real API calls, auto-refresh every 30s, and handle loading/error states (completed 2026-03-02)
 
 ## Phase Details
 
@@ -46,4 +46,4 @@ Phases execute in numeric order: 1 → 2
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Backend STIB Integration | 2/2 | Complete   | 2026-03-02 |
-| 2. Frontend Live Integration | 0/2 | Not started | - |
+| 2. Frontend Live Integration | 2/2 | Complete   | 2026-03-02 |

@@ -10,8 +10,8 @@
 - [x] **DEPT-01**: User sees real-time STIB departures for hardcoded Brussels routes on dashboard
 - [x] **DEPT-02**: Each departure shows line number, direction, and minutes until arrival
 - [x] **DEPT-03**: Departures auto-refresh every 30 seconds
-- [ ] **DEPT-04**: Dashboard shows loading state while fetching departures
-- [ ] **DEPT-05**: Dashboard shows error state if STIB API is unavailable
+- [x] **DEPT-04**: Dashboard shows loading state while fetching departures
+- [x] **DEPT-05**: Dashboard shows error state if STIB API is unavailable
 
 ### Dashboard
 
@@ -59,8 +59,8 @@
 | DEPT-01 | Phase 1 - Backend STIB Integration | Complete |
 | DEPT-02 | Phase 1 - Backend STIB Integration | Complete |
 | DEPT-03 | Phase 2 - Frontend Live Integration | Complete |
-| DEPT-04 | Phase 2 - Frontend Live Integration | Pending |
-| DEPT-05 | Phase 2 - Frontend Live Integration | Pending |
+| DEPT-04 | Phase 2 - Frontend Live Integration | Complete |
+| DEPT-05 | Phase 2 - Frontend Live Integration | Complete |
 | DASH-01 | Phase 2 - Frontend Live Integration | Complete |
 
 **Coverage:**

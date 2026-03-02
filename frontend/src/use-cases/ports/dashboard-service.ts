@@ -1,5 +1,5 @@
-import type { DashboardData } from '../../entities/dashboard'
+import type { DeparturesData } from '../../entities/dashboard'
 
 export interface IDashboardService {
-  getDashboard(): DashboardData
+  getDepartures(): Promise<DeparturesData>
 }

@@ -7,15 +7,15 @@
 
 ### Departures
 
-- [ ] **DEPT-01**: User sees real-time STIB departures for hardcoded Brussels routes on dashboard
+- [x] **DEPT-01**: User sees real-time STIB departures for hardcoded Brussels routes on dashboard
 - [x] **DEPT-02**: Each departure shows line number, direction, and minutes until arrival
-- [ ] **DEPT-03**: Departures auto-refresh every 30 seconds
+- [x] **DEPT-03**: Departures auto-refresh every 30 seconds
 - [ ] **DEPT-04**: Dashboard shows loading state while fetching departures
 - [ ] **DEPT-05**: Dashboard shows error state if STIB API is unavailable
 
 ### Dashboard
 
-- [ ] **DASH-01**: Dashboard displays commute routes with transport lines and departure pills (matches current mock layout)
+- [x] **DASH-01**: Dashboard displays commute routes with transport lines and departure pills (matches current mock layout)
 
 ## v2 Requirements
 
@@ -56,12 +56,12 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DEPT-01 | Phase 1 - Backend STIB Integration | Pending |
+| DEPT-01 | Phase 1 - Backend STIB Integration | Complete |
 | DEPT-02 | Phase 1 - Backend STIB Integration | Complete |
-| DEPT-03 | Phase 2 - Frontend Live Integration | Pending |
+| DEPT-03 | Phase 2 - Frontend Live Integration | Complete |
 | DEPT-04 | Phase 2 - Frontend Live Integration | Pending |
 | DEPT-05 | Phase 2 - Frontend Live Integration | Pending |
-| DASH-01 | Phase 2 - Frontend Live Integration | Pending |
+| DASH-01 | Phase 2 - Frontend Live Integration | Complete |
 
 **Coverage:**
 - v1 requirements: 6 total

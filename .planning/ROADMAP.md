@@ -22,7 +22,7 @@ Two phases deliver the core value: first, wire the backend to real STIB departur
   4. The endpoint is defined in `api-spec/openapi.yaml` and the backend implements the generated interface
 **Plans**: 2 plans
 - [x] 01-01-PLAN.md — OpenAPI contract + STIB API client with JSON parsing test
-- [ ] 01-02-PLAN.md — DeparturesService + controller + end-to-end verification
+- [x] 01-02-PLAN.md — DeparturesService + controller + end-to-end verification
 
 ### Phase 2: Frontend Live Integration
 **Goal**: Users open the dashboard and see live departure times that stay current automatically
@@ -35,8 +35,8 @@ Two phases deliver the core value: first, wire the backend to real STIB departur
   4. When the STIB API is unavailable, the dashboard shows an error message instead of crashing
   5. The layout matches the existing mock: route cards, transport lines, and departure pills
 **Plans**: 2 plans
-- [ ] 02-01-PLAN.md — Real API wiring + type remodel + 30s auto-refresh
-- [ ] 02-02-PLAN.md — Loading skeleton, error card, staleness warning + visual verification
+- [x] 02-01-PLAN.md — Real API wiring + type remodel + 30s auto-refresh
+- [x] 02-02-PLAN.md — Loading skeleton, error card, staleness warning + visual verification
 
 ## Progress
 

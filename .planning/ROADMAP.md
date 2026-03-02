@@ -21,7 +21,7 @@ Two phases deliver the core value: first, wire the backend to real STIB departur
   3. The STIB API key is read from an environment variable, never hardcoded
   4. The endpoint is defined in `api-spec/openapi.yaml` and the backend implements the generated interface
 **Plans**: 2 plans
-- [ ] 01-01-PLAN.md — OpenAPI contract + STIB API client with JSON parsing test
+- [x] 01-01-PLAN.md — OpenAPI contract + STIB API client with JSON parsing test
 - [ ] 01-02-PLAN.md — DeparturesService + controller + end-to-end verification
 
 ### Phase 2: Frontend Live Integration
@@ -43,5 +43,5 @@ Phases execute in numeric order: 1 → 2
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Backend STIB Integration | 0/2 | Planned | - |
+| 1. Backend STIB Integration | 1/2 | In progress | - |
 | 2. Frontend Live Integration | 0/? | Not started | - |

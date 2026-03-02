@@ -11,6 +11,28 @@ security:
   - bearerAuth: []
 
 paths:
+  /api/departures:
+    get:
+      summary: Get real-time departures for configured stops
+      description: Returns real-time departure information grouped by route (stop + line + direction)
+      operationId: getDepartures
+      tags:
+        - departures
+      security: []
+      responses:
+        '200':
+          description: Departure information grouped by route
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeparturesResponse'
+        '502':
+          description: STIB API unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/routes:
     get:
       summary: List all saved routes
@@ -132,6 +154,62 @@ components:
           format: date-time
           description: Timestamp when the route was created
           example: "2026-01-22T10:30:00Z"
+
+    DeparturesResponse:
+      type: object
+      required:
+        - lastUpdated
+        - routes
+      properties:
+        lastUpdated:
+          type: string
+          format: date-time
+          description: Timestamp of when data was fetched
+          example: "2026-03-02T20:00:00Z"
+        routes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RouteDepartures'
+
+    RouteDepartures:
+      type: object
+      required:
+        - stopName
+        - lineNumber
+        - direction
+        - departures
+      properties:
+        stopName:
+          type: string
+          description: Human-readable stop name
+          example: "Woest"
+        lineNumber:
+          type: string
+          description: Line identifier
+          example: "51"
+        direction:
+          type: string
+          description: Destination name
+          example: "Gare du Midi"
+        departures:
+          type: array
+          items:
+            $ref: '#/components/schemas/Departure'
+
+    Departure:
+      type: object
+      required:
+        - minutesUntilArrival
+        - destination
+      properties:
+        minutesUntilArrival:
+          type: integer
+          description: Minutes until the vehicle arrives
+          example: 3
+        destination:
+          type: string
+          description: Destination of the vehicle
+          example: "Gare du Midi"
 
     ErrorResponse:
       type: object

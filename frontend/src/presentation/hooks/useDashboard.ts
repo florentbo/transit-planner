@@ -1,9 +1,13 @@
-import { useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { useDashboardService } from '../../infrastructure/di/use-dashboard-service'
-import { GetDashboard } from '../../use-cases/dashboard/get-dashboard'
+import type { DeparturesData } from '../../entities/dashboard'
 
 export function useDashboard() {
   const service = useDashboardService()
-  const useCase = useMemo(() => new GetDashboard(service), [service])
-  return useCase.execute()
+
+  return useQuery<DeparturesData, Error>({
+    queryKey: ['departures'],
+    queryFn: () => service.getDepartures(),
+    refetchInterval: 30_000,
+  })
 }

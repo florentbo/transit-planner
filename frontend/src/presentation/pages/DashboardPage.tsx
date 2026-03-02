@@ -4,10 +4,9 @@ import { DashboardHeader } from '../components/DashboardHeader'
 import { GreetingSection } from '../components/GreetingSection'
 import { FavoriteRouteCard } from '../components/FavoriteRouteCard'
 import { DarkModeToggle } from '../components/DarkModeToggle'
-import { StarIcon } from '../components/StarIcon'
 
 export function DashboardPage() {
-  const { userName, city, favoriteRoute } = useDashboard()
+  const { data } = useDashboard()
   const { isDark, toggle } = useDarkMode()
 
   return (
@@ -16,17 +15,13 @@ export function DashboardPage() {
         Skip to main content
       </a>
 
-      <DashboardHeader city={city} userInitial={userName[0]} />
+      <DashboardHeader city="Brussels" userInitial="F" />
 
       <main id="main" className="mx-auto max-w-2xl px-4 py-8">
-        <GreetingSection userName={userName} />
+        <GreetingSection userName="Florent" />
 
-        <section aria-label="Favorite route" className="mt-8">
-          <div className="mb-4 flex items-center gap-2">
-            <StarIcon />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Your Favorite</h2>
-          </div>
-          <FavoriteRouteCard route={favoriteRoute} />
+        <section aria-label="Departures" className="mt-8">
+          {data && <FavoriteRouteCard routes={data.routes} />}
         </section>
       </main>
 

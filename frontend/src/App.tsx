@@ -1,10 +1,10 @@
 import { ServiceProvider } from './infrastructure/di/service-provider'
-import { mockDashboardService } from './infrastructure/mock/mock-dashboard-service'
+import { apiDashboardService } from './infrastructure/api/api-dashboard-service'
 import { DashboardPage } from './presentation/pages/DashboardPage'
 
 function App() {
   return (
-    <ServiceProvider dashboardService={mockDashboardService}>
+    <ServiceProvider dashboardService={apiDashboardService}>
       <DashboardPage />
     </ServiceProvider>
   )

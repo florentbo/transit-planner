@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 
 ## Current Position
 
-Phase: 2 of 2 (Frontend Live Integration)
-Plan: 2 of 2 in current phase
-Status: Complete — all phases and plans finished
-Last activity: 2026-03-02 — 02-02 checkpoint approved, plan complete
+Phase: 1 of 1 (Deploy to GCloud)
+Plan: 1 of 1 in current phase
+Status: Complete — Cloud Run deployment verified live
+Last activity: 2026-03-03 — 01-01 checkpoint approved, Cloud Run deployment verified
 
 Progress: [██████████] 100%
 
@@ -76,6 +76,9 @@ Recent decisions affecting current work:
 - [02-01] IDashboardService port is async Promise<DeparturesData> — infrastructure adapter handles error throwing
 - [Phase 02-02]: Skeleton only on initial load (isLoading && !data) to avoid flicker during background 30s refresh
 - [Phase 02-02]: Stale cached data preserved with amber warning when refresh fails — never blank the screen
+- [01-01] Dockerfile at repo root (not backend/) because Gradle build needs ../api-spec/openapi.yaml for OpenAPI codegen
+- [01-01] PORT env var with ${PORT:8080} fallback — Cloud Run injects PORT, local dev uses 8080
+- [01-01] STIB_API_KEY passed as --set-env-vars at deploy time, not baked into image
 
 ### Roadmap Evolution
 
@@ -91,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-02
-Stopped at: Completed 02-02-PLAN.md — all phases and plans complete
-Resume file: N/A — project execution complete
+Last session: 2026-03-03
+Stopped at: Completed 01-01-PLAN.md — Cloud Run deployment live and verified
+Resume file: N/A — plan execution complete

@@ -29,4 +29,4 @@
 **Plans:** 1/1 plans complete
 
 Plans:
-- [ ] 01-01-PLAN.md — Add deployment files (Dockerfile, .dockerignore, DEPLOYMENT.md, application.yml) and verify Cloud Run deployment
+- [x] 01-01-PLAN.md — Add deployment files (Dockerfile, .dockerignore, DEPLOYMENT.md, application.yml) and verify Cloud Run deployment

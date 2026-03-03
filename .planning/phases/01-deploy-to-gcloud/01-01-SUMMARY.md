@@ -49,10 +49,10 @@ completed: 2026-03-03
 
 ## Performance
 
-- **Duration:** ~5 min
+- **Duration:** ~5 min (automation) + async user deployment
 - **Started:** 2026-03-03T17:21:02Z
-- **Completed:** 2026-03-03T17:26:00Z
-- **Tasks:** 1 of 2 (Task 2 is human-verify checkpoint — user deploys to Cloud Run)
+- **Completed:** 2026-03-03T17:44:40Z
+- **Tasks:** 2 of 2 (both complete)
 - **Files modified:** 4
 
 ## Accomplishments
@@ -61,14 +61,16 @@ completed: 2026-03-03
 - Updated application.yml server.port from `8080` to `${PORT:8080}` while preserving all STIB API config
 - Created .dockerignore excluding frontend/, .git/, backend/build/, backend/.gradle/, and *.md
 - Created DEPLOYMENT.md documenting full Cloud Run deployment including STIB_API_KEY as required env var
+- Cloud Run service deployed and verified live at https://transit-planner-backend-621870148637.europe-west1.run.app — returning real STIB departure data
 
 ## Task Commits
 
 Each task was committed atomically:
 
 1. **Task 1: Add deployment infrastructure files from feature branch** - `b55bdf3` (chore)
+2. **Task 2: Verify deployment to Google Cloud Run** - checkpoint approved (user deployed, service live)
 
-**Plan metadata:** (docs commit — pending after checkpoint approval)
+**Plan metadata:** `00bafba` (docs: complete deployment infrastructure plan)
 
 ## Files Created/Modified
 
@@ -99,9 +101,10 @@ None.
 
 ## Next Phase Readiness
 
-- Deployment infrastructure on main branch, ready for `gcloud run deploy` from repo root
-- User must run deploy command with actual STIB_API_KEY value
-- Task 2 checkpoint: user confirms Cloud Run service responds to API requests
+- Backend is live on Cloud Run at https://transit-planner-backend-621870148637.europe-west1.run.app
+- Service returns real-time STIB departure data (verified)
+- Frontend can be updated to point at Cloud Run URL instead of localhost:8080
+- No blockers — deployment infrastructure complete
 
 ---
 *Phase: 01-deploy-to-gcloud*

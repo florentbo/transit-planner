@@ -1,7 +1,7 @@
 import type { IDashboardService } from '../../use-cases/ports/dashboard-service'
 import type { DeparturesData } from '../../entities/dashboard'
 
-const API_BASE_URL = 'http://localhost:8080'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
 
 export const apiDashboardService: IDashboardService = {
   getDepartures: async (): Promise<DeparturesData> => {

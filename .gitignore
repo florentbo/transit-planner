@@ -22,3 +22,10 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Local Netlify folder
+.netlify
+
+# Deploy scripts with credentials (local overrides)
+deploy-backend.local.sh
+deploy-backend-local.local.sh

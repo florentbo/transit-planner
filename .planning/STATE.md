@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-02T22:43:24.167Z"
+last_updated: "2026-03-03T17:22:57.786Z"
 progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_phases: 1
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
 ---
 
 # Project State
@@ -51,6 +51,7 @@ Progress: [██████████] 100%
 | Phase 01-backend-stib-integration P02 | 2 | 1 tasks | 4 files |
 | Phase 02-frontend-live-integration P01 | 3 | 2 tasks | 11 files |
 | Phase 02 P02 | 2 | 1 tasks | 4 files |
+| Phase 01-deploy-to-gcloud P01 | 1 | 1 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,10 @@ Recent decisions affecting current work:
 - [02-01] IDashboardService port is async Promise<DeparturesData> — infrastructure adapter handles error throwing
 - [Phase 02-02]: Skeleton only on initial load (isLoading && !data) to avoid flicker during background 30s refresh
 - [Phase 02-02]: Stale cached data preserved with amber warning when refresh fails — never blank the screen
+
+### Roadmap Evolution
+
+- Phase 1 added: deploy to gcloud
 
 ### Pending Todos
 

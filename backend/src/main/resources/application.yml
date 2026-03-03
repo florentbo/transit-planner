@@ -15,5 +15,5 @@ cors:
 
 logging:
   level:
-    com.transit: INFO
+    com.transit: DEBUG
     org.springframework.web: INFO

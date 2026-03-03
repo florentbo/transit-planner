@@ -20,3 +20,13 @@
 |-------|-----------|----------------|--------|-----------|
 | 1. Backend STIB Integration | v1.0 | 2/2 | Complete | 2026-03-02 |
 | 2. Frontend Live Integration | v1.0 | 2/2 | Complete | 2026-03-02 |
+
+### Phase 1: deploy to gcloud
+
+**Goal:** Deploy backend to Google Cloud Run, integrating existing deployment infrastructure from feature branch into main
+**Requirements**: DEPLOY-01
+**Depends on:** v1.0 MVP
+**Plans:** 1 plan
+
+Plans:
+- [ ] 01-01-PLAN.md — Add deployment files (Dockerfile, .dockerignore, DEPLOYMENT.md, application.yml) and verify Cloud Run deployment

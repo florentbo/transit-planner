@@ -70,28 +70,71 @@ The following environment variables must be set on the Cloud Run service:
 | Variable | Description | Required |
 |----------|-------------|----------|
 | `STIB_API_KEY` | API key for the STIB/MIVB Open Data platform | Yes |
+| `CORS_ALLOWED_ORIGINS` | Comma-separated allowed origins for CORS | Yes |
 | `PORT` | HTTP port Cloud Run will send traffic to (injected automatically) | Auto |
 
-## Deploying
+## CI/CD (GitHub Actions)
 
-From the repo root:
+Pushes to `main` that touch `backend/`, `api-spec/`, `Dockerfile`, or `.dockerignore` automatically deploy via GitHub Actions.
+
+**Workflow:** `.github/workflows/deploy-backend.yml`
+
+**Pipeline:** Checkout -> Auth (Service Account Key) -> Docker build -> Push to Artifact Registry -> `gcloud run deploy`
+
+### GitHub Secrets Required
+
+| Secret | Description |
+|--------|-------------|
+| `GCP_SA_KEY` | Service account key JSON for `github-actions@transport-login.iam.gserviceaccount.com` |
+| `STIB_API_KEY` | STIB/MIVB Open Data API key |
+| `CORS_ALLOWED_ORIGINS` | e.g. `http://localhost:5173,https://transit-planner-app.netlify.app` |
+
+### GCP Service Account Setup
+
+If you need to recreate the service account from scratch:
 
 ```bash
-gcloud run deploy transit-planner-backend \
-  --source . \
-  --region europe-west1 \
-  --allow-unauthenticated \
-  --memory 512Mi \
-  --cpu 1 \
-  --min-instances 0 \
-  --max-instances 1 \
-  --port 8080 \
-  --set-env-vars "STIB_API_KEY=your-key-here"
+# 1. Create service account
+gcloud iam service-accounts create github-actions \
+  --display-name="GitHub Actions" --project=transport-login
+
+# 2. Grant required roles
+SA=github-actions@transport-login.iam.gserviceaccount.com
+
+gcloud projects add-iam-policy-binding transport-login \
+  --member="serviceAccount:$SA" --role="roles/run.admin" --quiet
+gcloud projects add-iam-policy-binding transport-login \
+  --member="serviceAccount:$SA" --role="roles/storage.admin" --quiet
+gcloud projects add-iam-policy-binding transport-login \
+  --member="serviceAccount:$SA" --role="roles/iam.serviceAccountUser" --quiet
+gcloud projects add-iam-policy-binding transport-login \
+  --member="serviceAccount:$SA" --role="roles/artifactregistry.writer" --quiet
+
+# 3. Generate key and set as GitHub secret
+gcloud iam service-accounts keys create /tmp/key.json --iam-account=$SA
+gh secret set GCP_SA_KEY --repo florentbo/transit-planner < /tmp/key.json
+rm /tmp/key.json
 ```
 
-The `--source .` flag tells Cloud Build to upload the source, build the Docker image remotely using the Dockerfile, push it to Artifact Registry, and deploy it to Cloud Run. No local Docker build needed.
+## Manual Deploying
 
-Replace `your-key-here` with your actual STIB Open Data API key.
+### Local Docker build (fast, ~2-3 min)
+
+```bash
+./deploy-backend-local.sh
+```
+
+Builds locally, pushes to Artifact Registry, deploys to Cloud Run. Requires Docker and `gcloud auth configure-docker europe-west1-docker.pkg.dev`.
+
+### Remote Cloud Build (~10 min)
+
+```bash
+./deploy-backend.sh
+```
+
+Uploads source to Cloud Build for remote Docker build. No local Docker needed.
+
+Both scripts read `STIB_API_KEY` and `CORS_ALLOWED_ORIGINS` from env vars. Copy to `.local.sh` variants (gitignored) to hardcode credentials.
 
 ## Verifying
 

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -25,8 +27,13 @@ public class DeparturesService {
     private static final CommutRoute PANNENHUIS = new CommutRoute("8784", "Pannenhuis", "6", "Elisabeth");
     private static final List<CommutRoute> COMMUTE_ROUTES = List.of(WOEST, PANNENHUIS);
 
+    private static final Duration CACHE_TTL = Duration.ofSeconds(15);
+
     private final StibApiClient stibApiClient;
     private final Clock clock;
+
+    private volatile StibWaitingTimesResponse cachedResponse;
+    private volatile Instant cachedAt;
 
     public DeparturesService(StibApiClient stibApiClient, Clock clock) {
         this.stibApiClient = stibApiClient;
@@ -34,13 +41,7 @@ public class DeparturesService {
     }
 
     public DeparturesResponse getDepartures() {
-        StibWaitingTimesResponse stibResponse;
-        try {
-            List<String> pointIds = COMMUTE_ROUTES.stream().map(CommutRoute::pointId).toList();
-            stibResponse = stibApiClient.fetchWaitingTimes(pointIds);
-        } catch (StibApiException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "STIB API unavailable: " + e.getMessage(), e);
-        }
+        StibWaitingTimesResponse stibResponse = fetchWaitingTimesCached();
 
         OffsetDateTime now = OffsetDateTime.now(clock);
 
@@ -61,5 +62,21 @@ public class DeparturesService {
         }
 
         return new DeparturesResponse(now, routes);
+    }
+
+    private synchronized StibWaitingTimesResponse fetchWaitingTimesCached() {
+        Instant now = clock.instant();
+        if (cachedResponse != null && Duration.between(cachedAt, now).compareTo(CACHE_TTL) < 0) {
+            return cachedResponse;
+        }
+        try {
+            List<String> pointIds = COMMUTE_ROUTES.stream().map(CommutRoute::pointId).toList();
+            StibWaitingTimesResponse fresh = stibApiClient.fetchWaitingTimes(pointIds);
+            cachedResponse = fresh;
+            cachedAt = now;
+            return fresh;
+        } catch (StibApiException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "STIB API unavailable: " + e.getMessage(), e);
+        }
     }
 }

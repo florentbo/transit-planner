@@ -7,7 +7,7 @@ spring:
 
 stib:
   api:
-    base-url: https://stibmivb.opendatasoft.com/api/explore/v2.1
+    base-url: https://api-management-opendata-production.azure-api.net/api/datasets/stibmivb/rt/WaitingTimes
     key: ${STIB_API_KEY}
 
 cors:

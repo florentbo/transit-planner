@@ -53,7 +53,7 @@ class DeparturesServiceTest {
     @BeforeEach
     void setUp() {
         var stibApiClient = new StibApiClient(
-                wireMock.baseUrl() + "/api/explore/v2.1",
+                wireMock.baseUrl() + "/api/datasets/stibmivb/rt/WaitingTimes",
                 "test-key");
         departuresService = new DeparturesService(stibApiClient, fixedClock);
     }
@@ -61,7 +61,7 @@ class DeparturesServiceTest {
     @Test
     void returnsDeparturesFromRealStibResponse() {
         wireMock.stubFor(get(urlPathEqualTo(
-                "/api/explore/v2.1/catalog/datasets/waiting-time-rt-production/records"))
+                "/api/datasets/stibmivb/rt/WaitingTimes"))
                 .willReturn(okJson(REAL_STIB_RESPONSE)));
 
         DeparturesResponse result = departuresService.getDepartures();
@@ -94,7 +94,7 @@ class DeparturesServiceTest {
     @Test
     void throwsWhenStibApiDown() {
         wireMock.stubFor(get(urlPathEqualTo(
-                "/api/explore/v2.1/catalog/datasets/waiting-time-rt-production/records"))
+                "/api/datasets/stibmivb/rt/WaitingTimes"))
                 .willReturn(serverError()));
 
         assertThatThrownBy(() -> departuresService.getDepartures())

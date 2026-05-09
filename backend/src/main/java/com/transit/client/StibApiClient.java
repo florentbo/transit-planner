@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
+import java.nio.charset.StandardCharsets;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
@@ -40,15 +42,14 @@ public class StibApiClient {
 
     public StibWaitingTimesResponse fetchWaitingTimes(List<String> pointIds) {
         String whereClause = pointIds.stream()
-                .map(id -> "pointid=" + id)
-                .collect(Collectors.joining(" or "));
+                .map(id -> "pointid=\"" + id + "\"")
+                .collect(Collectors.joining(" OR "));
 
-        String url = baseUrl + "/catalog/datasets/waiting-time-rt-production/records"
-                + "?where=" + whereClause.replace(" ", "%20")
-                + "&apikey=" + apiKey;
+        String url = baseUrl + "?where=" + URLEncoder.encode(whereClause, StandardCharsets.UTF_8);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
+                .header("bmc-partner-key", apiKey)
                 .timeout(Duration.ofSeconds(5))
                 .GET()
                 .build();

@@ -62,3 +62,13 @@ sourceSets {
 }
 
 compileJava.dependsOn tasks.openApiGenerate
+
+// Produce only the executable boot jar so build/libs/*.jar is unambiguous on Scalingo.
+tasks.named('jar') {
+	enabled = false
+}
+
+// Scalingo's Gradle buildpack runs this task during deployment.
+tasks.register('stage') {
+	dependsOn 'bootJar'
+}

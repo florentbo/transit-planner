@@ -1,11 +1,11 @@
 # Deploying the Backend to Google Cloud Run
 
-> ⚠️ **Dormant fallback — not the active deploy.** The backend now deploys to
+> ⚠️ **Decommissioned — kept as a reference only.** The backend now deploys to
 > **Scalingo** (see `SCALINGO.md`), which is what the Netlify frontend points at.
-> The Cloud Run GitHub Action (`.github/workflows/deploy-backend.yml`) is **disabled**,
-> so pushes to `main` no longer deploy here. The last-deployed Cloud Run image keeps
-> running as a fallback. This document remains a reference for re-enabling Cloud Run:
-> `gh workflow enable deploy-backend.yml`, or run `deploy-backend.sh` manually.
+> The Cloud Run service and its Artifact Registry images have been **deleted**, and the
+> GitHub Action (`.github/workflows/deploy-backend.yml`) is **disabled**. Nothing here is
+> live. To bring Cloud Run back, recreate it with `deploy-backend.sh` (then
+> `gh workflow enable deploy-backend.yml` for CI). The steps below document how.
 
 ## Overview
 

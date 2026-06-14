@@ -1,5 +1,12 @@
 # Deploying the Backend to Google Cloud Run
 
+> ⚠️ **Dormant fallback — not the active deploy.** The backend now deploys to
+> **Scalingo** (see `SCALINGO.md`), which is what the Netlify frontend points at.
+> The Cloud Run GitHub Action (`.github/workflows/deploy-backend.yml`) is **disabled**,
+> so pushes to `main` no longer deploy here. The last-deployed Cloud Run image keeps
+> running as a fallback. This document remains a reference for re-enabling Cloud Run:
+> `gh workflow enable deploy-backend.yml`, or run `deploy-backend.sh` manually.
+
 ## Overview
 
 The backend (Java 25, Spring Boot 4.0, Gradle 9.2.1) is deployed to Google Cloud Run's free tier as a Docker container. Cloud Run scales to zero when idle and provides 2M free requests/month.
@@ -75,7 +82,10 @@ The following environment variables must be set on the Cloud Run service:
 
 ## CI/CD (GitHub Actions)
 
-Pushes to `main` that touch `backend/`, `api-spec/`, `Dockerfile`, or `.dockerignore` automatically deploy via GitHub Actions.
+> **Currently disabled.** This workflow was disabled (`gh workflow disable deploy-backend.yml`)
+> when the backend moved to Scalingo. Re-enable with `gh workflow enable deploy-backend.yml`.
+
+When enabled, pushes to `main` that touch `backend/`, `api-spec/`, `Dockerfile`, or `.dockerignore` automatically deploy via GitHub Actions.
 
 **Workflow:** `.github/workflows/deploy-backend.yml`
 

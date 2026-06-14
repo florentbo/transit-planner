@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# FALLBACK ONLY: the backend now deploys to Scalingo (see SCALINGO.md), which
+# auto-deploys on push to main. Cloud Run is a dormant fallback and its GitHub
+# Action is disabled. This script still works for a manual Cloud Run deploy
+# (remote Cloud Build).
 set -euo pipefail
 
 REGION="europe-west1"

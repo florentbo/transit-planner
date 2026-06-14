@@ -1,9 +1,30 @@
 # Deploying the Backend to Scalingo
 
-Alternative backend host to Google Cloud Run (see `DEPLOYMENT.md`). The Spring Boot
-app is built and run on Scalingo via its Gradle buildpack. Both targets can coexist:
-Cloud Run deploys via GitHub Actions on push to `main`; Scalingo deploys via
-`git push scalingo main`.
+Scalingo is the **primary backend host**. The Spring Boot app is built and run on
+Scalingo via its Gradle buildpack, and **auto-deploys on every push to `origin/main`**.
+
+Google Cloud Run still exists as a dormant fallback (see `DEPLOYMENT.md`), but its
+GitHub Action is disabled — pushes to `main` no longer deploy it.
+
+- **Live URL:** `https://transports.osc-fr1.scalingo.io`
+- **App / region:** `transports` / `osc-fr1`
+- **Frontend:** the Netlify app already points here via `VITE_API_BASE_URL`.
+
+## Auto-deploy (the normal flow)
+
+The Scalingo app is linked to the GitHub repo with auto-deploy on `main`:
+
+```
+git push origin main
+   └─► GitHub webhook ─► Scalingo pulls source ─► ./gradlew stage ─► ships + boots
+```
+
+The build runs **on Scalingo's servers**, not locally and not on GitHub. Your
+`git push origin main` returns immediately; watch the background build with:
+
+```bash
+scalingo --app transports deployment-follow
+```
 
 ## Monorepo layout — the key setting
 
@@ -11,7 +32,7 @@ This repo is a monorepo: the Gradle project lives in `backend/`, not at the root
 the build reads the OpenAPI spec from the sibling `../api-spec/openapi.yaml` at build
 time (only — the boot jar is self-contained at runtime).
 
-Scalingo must be told where the app lives (app name: `transports`, region `osc-fr1`):
+Scalingo is told where the app lives via the `PROJECT_DIR` env var:
 
 ```bash
 scalingo --app transports env-set PROJECT_DIR=backend
@@ -22,47 +43,38 @@ committed wrapper there, and runs `./gradlew stage`. The full repo is checked ou
 during the build, so `../api-spec` resolves; only `backend/` is shipped to the runtime
 image (which is all the jar needs).
 
-## Files added for Scalingo (all under `backend/`)
+## Files that make this work (all under `backend/`)
 
 | File | Purpose |
 |------|---------|
-| `backend/system.properties` | Pins the JDK: `java.runtime.version=25` |
+| `backend/system.properties` | Pins the JDK: `java.runtime.version=25` (Scalingo ships Azul Zulu 25) |
 | `backend/Procfile` | Start command: `web: java -Dserver.port=$PORT $JAVA_OPTS -jar build/libs/*.jar` |
-| `backend/build.gradle` | Added a `stage` task (runs `bootJar`) and disabled the plain jar so `build/libs/*.jar` is unambiguous |
+| `backend/build.gradle` | A `stage` task (runs `bootJar`) and the plain jar disabled so `build/libs/*.jar` is unambiguous |
 
-`server.port=${PORT:8080}` was already set in `application.yml` (from the Cloud Run work),
-so Scalingo's injected `$PORT` is honored with no change.
+`server.port=${PORT:8080}` in `application.yml` honors Scalingo's injected `$PORT`.
 
-> ⚠️ **Java 25:** the JDK is pinned to 25. If Scalingo's buildpack does not yet ship
-> Azul Zulu 25, the build fails at `Installing Azul Zulu OpenJDK` — downgrade the
-> toolchain in `backend/build.gradle` and `system.properties` to 21 if so.
+## Environment variables (already set on the app)
 
-## Environment variables to set on Scalingo
+| Variable | Value | Notes |
+|----------|-------|-------|
+| `PROJECT_DIR` | `backend` | Required, or detection fails at repo root |
+| `STIB_API_KEY` | *(secret)* | STIB/MIVB Open Data API key |
+| `CORS_ALLOWED_ORIGINS` | `https://transit-planner-app.netlify.app` | Allows the Netlify frontend |
 
-| Variable | Value | Required |
-|----------|-------|----------|
-| `PROJECT_DIR` | `backend` | Yes (without it, detection fails at repo root) |
-| `STIB_API_KEY` | STIB/MIVB Open Data API key | Yes |
-| `CORS_ALLOWED_ORIGINS` | e.g. `https://transit-planner-app.netlify.app` | Yes |
+To change one: `scalingo --app transports env-set NAME=value` then
+`scalingo --app transports restart`.
 
-## Deploy steps
+## Manual deploy (fallback)
 
-Deploys to the existing `transports` app. The git remote is already configured:
-`scalingo  git@ssh.osc-fr1.scalingo.com:transports.git`.
+The `scalingo` git remote is configured
+(`git@ssh.osc-fr1.scalingo.com:transports.git`). If you ever need to deploy without
+going through GitHub:
 
 ```bash
-# 1. Configure env (PROJECT_DIR before first deploy so detection succeeds).
-#    Set via dashboard (Environment) or the CLI:
-scalingo --app transports env-set PROJECT_DIR=backend
-scalingo --app transports env-set STIB_API_KEY=...
-scalingo --app transports env-set CORS_ALLOWED_ORIGINS=https://transit-planner-app.netlify.app
-
-# 2. Deploy
 git push scalingo main
 ```
 
-A successful build logs `./gradlew stage` → `BUILD SUCCESSFUL` →
-`<-- https://transit-planner-backend.osc-fr1.scalingo.io -->`.
+This streams the remote build live and blocks until it finishes (~1 min).
 
 ## Local sanity check (mirrors what Scalingo runs)
 
@@ -73,9 +85,9 @@ java -Dserver.port=8080 -jar build/libs/*.jar
 curl localhost:8080/api/departures
 ```
 
-## Switching the frontend over
+## Troubleshooting
 
-The Netlify frontend reads its backend URL from the `VITE_API_BASE_URL` build env var
-(see `frontend/src/infrastructure/api/api-dashboard-service.ts`). To point it at
-Scalingo instead of Cloud Run, update `VITE_API_BASE_URL` in the Netlify dashboard to
-the Scalingo URL and redeploy the frontend.
+- **Detection fails / builds at repo root:** `PROJECT_DIR=backend` is missing.
+- **Build fails at `Installing Azul Zulu OpenJDK`:** the pinned JDK isn't available —
+  lower `java.runtime.version` (and the Gradle toolchain in `build.gradle`).
+- **Frontend CORS errors:** `CORS_ALLOWED_ORIGINS` must include the Netlify origin.

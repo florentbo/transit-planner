@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-# FALLBACK ONLY: the backend now deploys to Scalingo (see SCALINGO.md), which
-# auto-deploys on push to main. Cloud Run is a dormant fallback and its GitHub
-# Action is disabled. This script still works for a manual Cloud Run deploy
-# (remote Cloud Build).
+# Manual deploy to Cloud Run, the primary backend host (see DEPLOYMENT.md).
+# Normal deploys go through the GitHub Action on push to main; use this script to
+# recreate the service from scratch or to deploy without CI. Builds remotely on
+# Cloud Build, so nothing compiles locally.
+#
+# Serving URL is https://transport-back.bonamis.be (Cloud Run domain mapping).
 set -euo pipefail
 
 REGION="europe-west1"

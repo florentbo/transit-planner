@@ -1,14 +1,24 @@
 # Deploying the Backend to Scalingo
 
-Scalingo is the **primary backend host**. The Spring Boot app is built and run on
-Scalingo via its Gradle buildpack, and **auto-deploys on every push to `origin/main`**.
+> ⚠️ **Parked fallback — no longer serving the frontend.** The backend now runs on
+> **Google Cloud Run** (see `DEPLOYMENT.md`), reached at `https://transport-back.bonamis.be`,
+> which is what Netlify's `VITE_API_BASE_URL` points at.
+>
+> The Scalingo app is still deployed and still auto-deploys on push to `main`, so it stays
+> current as a hot standby on its free tier.
+>
+> To fall back to it: add `transport-back.bonamis.be` as a custom domain on the Scalingo
+> app **first** (so Scalingo provisions a cert for that hostname), then repoint the
+> `transport-back` CNAME at OVH. Repointing DNS alone breaks TLS — Scalingo would serve
+> a `*.osc-fr1.scalingo.io` certificate for a hostname it doesn't know. No frontend
+> rebuild is needed either way, which is the point of the custom domain.
 
-Google Cloud Run still exists as a dormant fallback (see `DEPLOYMENT.md`), but its
-GitHub Action is disabled — pushes to `main` no longer deploy it.
+The Spring Boot app is built and run on Scalingo via its Gradle buildpack, and
+**auto-deploys on every push to `origin/main`**.
 
-- **Live URL:** `https://transports.osc-fr1.scalingo.io`
+- **Direct URL:** `https://transports.osc-fr1.scalingo.io`
 - **App / region:** `transports` / `osc-fr1`
-- **Frontend:** the Netlify app already points here via `VITE_API_BASE_URL`.
+- **Frontend:** no longer points here.
 
 ## Auto-deploy (the normal flow)
 

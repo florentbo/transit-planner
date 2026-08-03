@@ -1,17 +1,48 @@
 # Deploying the Backend to Google Cloud Run
 
-> ⚠️ **Decommissioned — kept as a reference only.** The backend now deploys to
-> **Scalingo** (see `SCALINGO.md`), which is what the Netlify frontend points at.
-> The Cloud Run service and its Artifact Registry images have been **deleted**, and the
-> GitHub Action (`.github/workflows/deploy-backend.yml`) is **disabled**. Nothing here is
-> live. To bring Cloud Run back, recreate it with `deploy-backend.sh` (then
-> `gh workflow enable deploy-backend.yml` for CI). The steps below document how.
+> ✅ **Primary backend host.** Cloud Run serves the app the Netlify frontend calls.
+> The GitHub Action (`.github/workflows/deploy-backend.yml`) is **enabled**, so pushes
+> to `main` touching `backend/`, `api-spec/`, or the Dockerfile redeploy it.
+> Scalingo (see `SCALINGO.md`) remains as a parked fallback on its free tier.
 
 ## Overview
 
 The backend (Java 25, Spring Boot 4.0, Gradle 9.2.1) is deployed to Google Cloud Run's free tier as a Docker container. Cloud Run scales to zero when idle and provides 2M free requests/month.
 
+**Public URL**: `https://transport-back.bonamis.be` — this is what the frontend uses.
+
 **Service URL**: `https://transit-planner-backend-621870148637.europe-west1.run.app`
+(Cloud Run's own hostname; it changes if the service is recreated, which is exactly why
+the frontend points at the custom domain instead.)
+
+### Custom domain
+
+`transport-back.bonamis.be` is a Cloud Run **domain mapping**, not a plain CNAME — a
+naked CNAME to `*.run.app` fails the TLS handshake (Cloud Run would present a cert for
+`*.run.app`, not for your hostname). The mapping makes Google issue and auto-renew a
+managed certificate for the custom name.
+
+| Piece | Value |
+|---|---|
+| DNS at OVH | `transport-back` CNAME → `ghs.googlehosted.com.` |
+| Domain verification | TXT on the root of `bonamis.be` (`google-site-verification=…`) |
+| Certificate | Google Trust Services, auto-renewed |
+
+**Do not delete that root TXT record** — removing it revokes domain verification and
+breaks the mapping.
+
+Recreate the mapping with:
+
+```bash
+gcloud beta run domain-mappings create \
+  --service transit-planner-backend \
+  --domain transport-back.bonamis.be \
+  --project transport-login --region europe-west1
+```
+
+Certificate issuance takes ~15 min but backs off to a 5-hour retry if it validates
+before DNS has propagated. If it stays pending, delete and recreate the mapping to
+restart validation instead of waiting out the backoff.
 
 ## Prerequisites
 
@@ -82,8 +113,9 @@ The following environment variables must be set on the Cloud Run service:
 
 ## CI/CD (GitHub Actions)
 
-> **Currently disabled.** This workflow was disabled (`gh workflow disable deploy-backend.yml`)
-> when the backend moved to Scalingo. Re-enable with `gh workflow enable deploy-backend.yml`.
+> **Enabled.** Pushes to `main` touching `backend/`, `api-spec/`, `Dockerfile`, or
+> `.dockerignore` build on a GitHub runner and deploy to Cloud Run. Doc-only commits
+> do not trigger it. Disable with `gh workflow disable deploy-backend.yml`.
 
 When enabled, pushes to `main` that touch `backend/`, `api-spec/`, `Dockerfile`, or `.dockerignore` automatically deploy via GitHub Actions.
 
